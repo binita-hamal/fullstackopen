@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import Filter from "./Filter";
-
+import '../db.json';
+import axios from 'axios'
 
 function App() {
-  const [persons, setPersons] = useState([
-    {
-      name: "bini",
-      id: 1,
-      number: "1213243434",
-    },
-  ]);
+  const [persons, setPersons] = useState([]);
 
   const [inputText, setInputText] = useState("");
   const [inputNum, setInputNum] = useState("");
 
   const [filterText, setFilterText] = useState("");
+
+
+  useEffect(()=>{
+    axios.get('http://localhost:3001/persons').then(res => setPersons(res.data))
+
+  },[])
 
   function handleFormSubmit(e) {
     e.preventDefault();
