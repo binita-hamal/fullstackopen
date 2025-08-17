@@ -142,12 +142,41 @@ function App() {
 
   function handleFormSubmit(e) {
     e.preventDefault();
-    console.log(persons)
-    let alreadyAdded = persons.filter((p) => p.name === inputText);
 
-    if (alreadyAdded.length > 0) {
-      alert(`${inputText} is already added to phonebook`);
-    } else {
+
+    // console.log(persons)
+
+
+    // let alreadyAdded = persons.filter((p) => p.name === inputText);
+
+    // if (alreadyAdded.length > 0) {
+    //   alert(`${inputText} is already added to phonebook`);
+    // } 
+
+    const existingPerson = persons.find((p)=> p.name === inputText);
+
+    if(existingPerson){
+      const confirmUser = window.confirm(`${inputText} is already added to phonebook. Replace the old number with a new one?`);
+    
+
+    if(confirmUser){
+      const updatePerson = {
+        ...existingPerson,
+        number: inputNum
+      }
+
+
+      service.update(existingPerson.id,updatePerson).then((pe)=>{
+        setPersons(persons.map((p)=> p.id === existingPerson.id ? pe : p))
+      })
+    }
+  }
+
+  
+
+    
+    
+    else {
       let obj = {
         name: inputText,
         id: persons.length + 1,
@@ -164,6 +193,8 @@ function App() {
         service.create(obj).then(res=>{
           setPersons([...persons,res.data])
         })
+
+
 
 
        
