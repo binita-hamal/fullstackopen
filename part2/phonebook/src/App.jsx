@@ -116,6 +116,7 @@ import Persons from "./Persons";
 import Filter from "./Filter";
 import '../db.json';
 import axios from 'axios'
+import service from "./services/axios"
 
 function App() {
   const [persons, setPersons] = useState([]);
@@ -126,16 +127,22 @@ function App() {
   const [filterText, setFilterText] = useState("");
 
 
-  useEffect(()=>{
-    axios.get('http://localhost:3001/persons').then(res => setPersons(res.data))
+  // useEffect(()=>{
+  //   axios.get('http://localhost:3001/persons').then(res => setPersons(res.data))
 
+  // },[])
+
+  useEffect(()=>{
+    service.getAll().then(res=> setPersons(res.data))
   },[])
+ 
 
 
 
 
   function handleFormSubmit(e) {
     e.preventDefault();
+    console.log(persons)
     let alreadyAdded = persons.filter((p) => p.name === inputText);
 
     if (alreadyAdded.length > 0) {
@@ -149,10 +156,14 @@ function App() {
 
 
      
-        axios.post('http://localhost:3001/persons',obj).then(res=>{
+        // axios.post('http://localhost:3001/persons',obj).then(res=>{
+        //   setPersons([...persons,res.data])
+        // })
+    
+
+        service.create(obj).then(res=>{
           setPersons([...persons,res.data])
         })
-    
       
     
 
@@ -166,7 +177,7 @@ function App() {
   }
 
   const filterPeople = persons.filter((p) => {
-    return p.name.toLowerCase().includes(filterText.toLowerCase());
+    return p?.name?.toLowerCase().includes(filterText.toLowerCase());
   });
 
   return (
