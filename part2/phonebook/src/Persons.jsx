@@ -1,42 +1,43 @@
-// import React from "react";
-
-// function Persons({ filterText, filterPeople, persons,handleDelete }) {
-  
-  
-
-
-//   return (
-//     <div>
-//       {(filterText ? filterPeople : persons).map((p) => {
-//         return (
-         
-//             <div key={p.id}>
-//               <p style={{ listStyle: "none" }}>
-//                 {p.name} {p.number}
-//               </p>
-//               <button onClick={() => handleDelete(p.id, p.name)}>delete</button>
-//             </div>
-          
-//         );
-//       })}
-//     </div>
-//   );
-// }
-
-// export default Persons;
-
-
 
 import React from 'react'
+import service from "./services/axios"
 
-function Persons({filterText,filterPeople,persons}) {
+function Persons({filterText,filterPeople,persons,setPersons}) {
+
+  function handleDelete(id,name){
+    // let deletePer = persons.filter((per)=> {
+    //   if(per.id === id){
+    //     window.confirm(`Delete ${per.name} ?`)
+    //   }
+    // })
+
+    // if(window.confirm(`Delete ${name}`)){
+    //   setPersons(persons.filter((per)=> per.id !== id))
+    // }
+
+
+    if(window.confirm(`Delete ${name}`)){
+      service.remove(id).then(()=>{
+        setPersons(persons.filter((per)=> per.id !== id))
+      })
+    }
+    
+  }
+
+
+
+
+
   return (
     <div>
        {(filterText ? filterPeople : persons).map((p) => {
             return (
               <p key={p.id} style={{ listStyle: "none" }}>
                 {p.name} {p.number}
+
+                <button onClick={()=> handleDelete(p.id,p.name)}>delete</button>
               </p>
+              
             );
           })}
     </div>

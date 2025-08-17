@@ -164,9 +164,11 @@ function App() {
         service.create(obj).then(res=>{
           setPersons([...persons,res.data])
         })
+
+
+       
       
     
-
 
 
 
@@ -205,6 +207,7 @@ function App() {
        
          <Persons filterText={filterText} filterPeople={filterPeople}
           persons={persons}
+          setPersons={setPersons}
          />
        
       </div>

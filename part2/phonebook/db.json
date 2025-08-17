@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": "2"
@@ -21,17 +16,17 @@
       "id": "4"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "anu",
       "number": "123"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "binita",
       "number": "777"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "ashim karki",
       "number": "234"
     },
@@ -41,32 +36,27 @@
       "number": "321"
     },
     {
-      "id": 9,
+      "id": "9",
       "name": "chahana",
       "number": "000"
     },
     {
-      "id": 10,
+      "id": "10",
       "name": "tinku",
       "number": "333"
     },
     {
-      "id": 11,
+      "id": "11",
       "name": "niru",
       "number": "123"
     },
     {
-      "id": 12,
+      "id": "12",
       "name": "bishnu",
       "number": "456"
     },
     {
-      "id": 13,
-      "name": "ass",
-      "number": "888"
-    },
-    {
-      "id": 14,
+      "id": "14",
       "name": "anjana",
       "number": "678"
     }
