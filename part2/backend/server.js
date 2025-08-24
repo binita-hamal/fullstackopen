@@ -7,7 +7,7 @@
 
 
 import express from "express";
-
+import morgan from 'morgan'
 
 let persons=[
     { 
@@ -33,7 +33,9 @@ let persons=[
 ]
 
 const app = express();
+
 app.use(express.json());
+app.use(morgan('tiny'))
 
 app.get('/api/persons',(req,res)=>{
     res.json(persons)
