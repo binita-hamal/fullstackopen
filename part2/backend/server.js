@@ -9,7 +9,7 @@
 import express from "express";
 
 
-const persons=[
+let persons=[
     { 
       "id": "1",
       "name": "Arto Hellas", 
@@ -51,6 +51,11 @@ app.get('/api/persons/:perId',(req,res)=>{
    
 })
 
+app.delete('/api/persons/:perId',(req,res)=>{
+    const id = req.params.perId;
+    persons = persons.filter((p=> p.id !== id))
+    res.status(204).end()
+})
 
 
 
@@ -60,6 +65,7 @@ app.get('/info',(req,res)=>{
 
         `)
 })
+
 
 
 
