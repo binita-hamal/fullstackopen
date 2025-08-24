@@ -63,6 +63,21 @@ app.post('/api/persons',(req,res)=>{
     const {name,number} = req.body
     const id = String(Math.floor(Math.random()* 1000000))
 
+    if(!name || !number){
+        return res.status(400).json({
+            error:'name or number is missing'
+        })
+    }
+
+    const alreadyExists = persons.find(p=> p.name === name)
+    if(alreadyExists){
+        return res.status(400).json({
+            error:'name must be unique'
+        })
+    }
+
+
+
     const newPersons = {
         id,
         name,
