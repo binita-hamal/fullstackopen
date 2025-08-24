@@ -33,6 +33,7 @@ let persons=[
 ]
 
 const app = express();
+app.use(express.json());
 
 app.get('/api/persons',(req,res)=>{
     res.json(persons)
@@ -58,6 +59,20 @@ app.delete('/api/persons/:perId',(req,res)=>{
 })
 
 
+app.post('/api/persons',(req,res)=>{
+    const {name,number} = req.body
+    const id = String(Math.floor(Math.random()* 1000000))
+
+    const newPersons = {
+        id,
+        name,
+        number
+    }
+    persons.push(newPersons)
+    res.status(201).json(newPersons)
+
+})
+
 
 app.get('/info',(req,res)=>{
     res.send(`<p>Phonebook has info for ${persons.length} people</p>
@@ -69,7 +84,7 @@ app.get('/info',(req,res)=>{
 
 
 
-const port= 6050
+const port= 3001
 
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`)
