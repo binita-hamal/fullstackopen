@@ -38,13 +38,27 @@ app.get('/api/persons',(req,res)=>{
     res.json(persons)
 })
 
+app.get('/api/persons/:perId',(req,res)=>{
+    const id = req.params.perId;
+    const specificPerson = persons.find((p) => p.id === id)
+    if(specificPerson){
+        res.json(specificPerson)
+        
+    }
+    else{
+        res.status(404).send({message:"not found"})
+    }
+   
+})
+
+
+
+
 app.get('/info',(req,res)=>{
     res.send(`<p>Phonebook has info for ${persons.length} people</p>
         <p>${new Date()}</p>
 
         `)
-   
-
 })
 
 
