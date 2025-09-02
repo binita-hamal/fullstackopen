@@ -24,7 +24,7 @@ function App() {
   // },[])
 
   useEffect(() => {
-    service.getAll().then((res) => setPersons(res.data));
+    service.getAll().then((data) => setPersons(data));
   }, []);
 
   function handleFormSubmit(e) {
@@ -67,7 +67,7 @@ function App() {
       // })
 
       service.create(obj).then((res) => {
-        setPersons([...persons, res.data]);
+        setPersons([...persons, res]);
 
 
         setNotification(`Added ${inputText}`)

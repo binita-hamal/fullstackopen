@@ -9,6 +9,16 @@
 import express from "express";
 import morgan from 'morgan'
 import cors from 'cors'
+import dotenv from "dotenv"
+import mongoose from "mongoose";
+import { Person } from "./models/person.js";
+
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL).then(()=>{
+    console.log('connected to MongoDB')
+}).catch(err => console.log(err))
+
 let persons=[
     { 
       "id": "1",
@@ -31,7 +41,6 @@ let persons=[
       "number": "39-23-6423122"
     }
 ]
-
 const app = express();
 
 app.use(express.json());
@@ -45,19 +54,23 @@ morgan.token('body',(req)=>{
 
 
 app.get('/api/persons',(req,res)=>{
-    res.json(persons)
+    // res.json(persons)
+    Person.find({})
+    .then(persons=>{
+        res.json(persons)
+    })
 })
 
 app.get('/api/persons/:perId',(req,res)=>{
     const id = req.params.perId;
-    const specificPerson = persons.find((p) => p.id === id)
-    if(specificPerson){
-        res.json(specificPerson)
+    // const specificPerson = persons.find((p) => p.id === id)
+    // if(specificPerson){
+    //     res.json(specificPerson)
         
-    }
-    else{
-        res.status(404).send({message:"not found"})
-    }
+    // }
+    // else{
+    //     res.status(404).send({message:"not found"})
+    // }
    
 })
 
@@ -87,13 +100,21 @@ app.post('/api/persons',(req,res)=>{
 
 
 
-    const newPersons = {
+    const newPersons = new Person({
         id,
         name,
         number
-    }
-    persons.push(newPersons)
-    res.status(201).json(newPersons)
+    })
+    // persons.push(newPersons)
+    // res.status(201).json(newPersons)
+    
+    newPersons.save()
+    .then(per=>{
+        res.status(201).json(per)
+    })
+    .catch(err=> console.log(err))
+
+
 
 })
 
@@ -104,6 +125,15 @@ app.get('/info',(req,res)=>{
 
         `)
 })
+
+
+// app.get('/api/persons',(req,res)=>{
+//     Person.find({})
+//     .then(persons =>{
+//         res.json(persons)
+//     })
+//     .catch(err=> console.log(err))
+// })
 
 
 
