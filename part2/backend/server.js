@@ -61,7 +61,7 @@ app.get('/api/persons',(req,res)=>{
     })
 })
 
-app.get('/api/persons/:perId',(req,res)=>{
+app.get('/api/persons/:perId',(req,res,next)=>{
     const id = req.params.perId;
     // const specificPerson = persons.find((p) => p.id === id)
     // if(specificPerson){
@@ -72,14 +72,21 @@ app.get('/api/persons/:perId',(req,res)=>{
     //     res.status(404).send({message:"not found"})
     // }
 
+
     Person.findById(id)
     .then(per=>{
-        res.json(per)
+        if(per){
+            res.json(per)
+        }
+        else{
+            res.status(404).end()
+        }
     })
+    .catch(err=> next(err))
    
 })
 
-app.delete('/api/persons/:perId',(req,res)=>{
+app.delete('/api/persons/:perId',(req,res,next)=>{
     const id = req.params.perId;
     // persons = persons.filter((p=> p.id !== id))
     // res.status(204).end()
@@ -95,11 +102,11 @@ app.delete('/api/persons/:perId',(req,res)=>{
             res.status(404).send({error:"name not found"})
         }
     })
-    .catch(err=> console.log(err))
+    .catch(err=> next(err))
 })
 
 
-app.post('/api/persons',(req,res)=>{
+app.post('/api/persons',(req,res,next)=>{
     const {name,number} = req.body
     const id = String(Math.floor(Math.random()* 1000000))
 
@@ -130,7 +137,7 @@ app.post('/api/persons',(req,res)=>{
     .then(per=>{
         res.status(201).json(per)
     })
-    .catch(err=> console.log(err))
+    .catch(err=> next(err))
 
 
 
@@ -152,6 +159,23 @@ app.get('/info',(req,res)=>{
 //     })
 //     .catch(err=> console.log(err))
 // })
+
+
+const unknownEndpoint = (req,res)=>{
+    res.status(404).send({error:"unknown endpoint"})
+}
+app.use(unknownEndpoint)
+
+
+const errorHandler = (error,req,res,next)=>{
+console.log(error.message)
+
+if(error.name === 'CastError'){
+    return res.status(400).send({error:'malformatted id'})
+}
+next(error)
+}
+app.use(errorHandler)
 
 
 
