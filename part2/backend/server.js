@@ -71,6 +71,11 @@ app.get('/api/persons/:perId',(req,res)=>{
     // else{
     //     res.status(404).send({message:"not found"})
     // }
+
+    Person.findById(id)
+    .then(per=>{
+        res.json(per)
+    })
    
 })
 
