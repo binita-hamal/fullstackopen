@@ -54,6 +54,10 @@ function App() {
         service.update(existingPerson.id, updatePerson).then((pe) => {
           setPersons(persons.map((p) => (p.id === existingPerson.id ? pe : p)));
         });
+
+        setInputText("")
+        setInputNum("")
+
       }
     } else {
       let obj = {

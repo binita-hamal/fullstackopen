@@ -152,6 +152,27 @@ app.get('/info',(req,res)=>{
 })
 
 
+
+app.put('/api/persons/:perId',(req,res)=>{
+    const id = req.params.perId
+    const {name,number} = req.body
+
+    Person.findByIdAndUpdate(
+        id,
+        {name,number},
+        {new: true}
+    )
+    .then(up=>{
+        if(!up){
+            return res.status(404).end()
+        }
+        res.json(up)
+    })
+
+    .catch(err=> next(err))
+})
+
+
 // app.get('/api/persons',(req,res)=>{
 //     Person.find({})
 //     .then(persons =>{
