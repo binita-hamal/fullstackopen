@@ -81,8 +81,21 @@ app.get('/api/persons/:perId',(req,res)=>{
 
 app.delete('/api/persons/:perId',(req,res)=>{
     const id = req.params.perId;
-    persons = persons.filter((p=> p.id !== id))
-    res.status(204).end()
+    // persons = persons.filter((p=> p.id !== id))
+    // res.status(204).end()
+
+
+    Person.findByIdAndDelete(id)
+    .then(result=>{
+        if(result){
+            res.status(204).end()
+
+        }
+        else{
+            res.status(404).send({error:"name not found"})
+        }
+    })
+    .catch(err=> console.log(err))
 })
 
 
