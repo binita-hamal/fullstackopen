@@ -16,7 +16,9 @@ function App() {
   const [filterText, setFilterText] = useState("");
 
 
-  const [notification,setNotification] = useState(null)
+  // const [notification,setNotification] = useState(null)
+  const [notification,setNotification] = useState({message:null, type:null})
+
 
   // useEffect(()=>{
   //   axios.get('http://localhost:3001/persons').then(res => setPersons(res.data))
@@ -51,7 +53,8 @@ function App() {
           number: inputNum,
         };
 
-        service.update(existingPerson.id, updatePerson).then((pe) => {
+        service.update(existingPerson.id, updatePerson)
+        .then((pe) => {
           setPersons(persons.map((p) => (p.id === existingPerson.id ? pe : p)));
         });
 
@@ -70,20 +73,26 @@ function App() {
       //   setPersons([...persons,res.data])
       // })
 
-      service.create(obj).then((res) => {
-        setPersons([...persons, res]);
+      service.create(obj)
+      .then((res) => {
+        setPersons([...persons, res.data]);
 
+        setNotification({message: `Added ${inputText}`, type:"sucess"})
 
-        setNotification(`Added ${inputText}`)
 
         setTimeout(()=>{
-
-          setNotification(null)
-
+          setNotification({message: null, type:null})
         },5000)
 
-       
-      });
+
+      })
+      .catch((error)=>{
+        setNotification({message:error.response.data.error, type:"error"})
+        setTimeout(()=>{
+        setNotification({message:null, type:null})
+      },5000)
+
+      })
 
       // setPersons([...persons, obj]);
       setInputText("");
@@ -100,7 +109,7 @@ function App() {
       <div>
         <h1>Phonebook</h1>
 
-        <Notification message={notification}/>
+        <Notification message={notification.message} type={notification.type}/>
 
 
         <Filter filterText={filterText} setFilterText={setFilterText} />

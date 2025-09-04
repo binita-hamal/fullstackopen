@@ -1,11 +1,12 @@
 import React from "react";
 
-function Notification({ message }) {
+function Notification({ message,type }) {
 
     if(!message) return null;
+
   return (
     <>
-      <div className="notification">{message}</div>
+      <div className={`notification ${type}`}>{message}</div>
     </>
   );
 }

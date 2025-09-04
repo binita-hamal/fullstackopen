@@ -116,12 +116,19 @@ app.post('/api/persons',(req,res,next)=>{
         })
     }
 
-    const alreadyExists = persons.find(p=> p.name === name)
-    if(alreadyExists){
-        return res.status(400).json({
-            error:'name must be unique'
-        })
-    }
+    // const alreadyExists = persons.find(p=> p.name === name)
+    // if(alreadyExists){
+    //     return res.status(400).json({
+    //         error:'name must be unique'
+    //     })
+    // }
+
+    Person.findOne({name})
+    .then(existing=>{
+        if(existing){
+            return res.status(400).json({errror:"name must be unique"})
+        }
+    })
 
 
 
@@ -133,13 +140,12 @@ app.post('/api/persons',(req,res,next)=>{
     // persons.push(newPersons)
     // res.status(201).json(newPersons)
     
-    newPersons.save()
+   return  newPersons.save()
     .then(per=>{
         res.status(201).json(per)
     })
+    
     .catch(err=> next(err))
-
-
 
 })
 
@@ -168,7 +174,9 @@ app.put('/api/persons/:perId',(req,res)=>{
     Person.findByIdAndUpdate(
         id,
         {name,number},
-        {new: true}
+        {new: true,
+        runValidators:true
+        }
     )
     .then(up=>{
         if(!up){
@@ -202,6 +210,12 @@ console.log(error.message)
 if(error.name === 'CastError'){
     return res.status(400).send({error:'malformatted id'})
 }
+
+else if(error.name === 'ValidationError'){
+    return res.status(400).json({error: error.message})
+}
+
+
 next(error)
 }
 app.use(errorHandler)
