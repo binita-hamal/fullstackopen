@@ -1,6 +1,6 @@
 import { test, describe } from "node:test";
 import assert from "assert";
-import { dummy, totalLikes } from "../utils/list_helper.js";
+import { dummy, favoriteBlog, totalLikes } from "../utils/list_helper.js";
 
 test("dummy returns one", () => {
   const blogs = [];
@@ -55,3 +55,34 @@ describe("total likes", () => {
     assert.strictEqual(result, 53);
   });
 });
+
+
+describe("most likes blog (favorite blog)",()=>{
+
+    const manyBlogs = [
+        {
+          title: "Learning Fullstack Development",
+          author: "Binit A. Hamal",
+          url: "https://myblog.com/learning-fullstack",
+          likes: 10,
+        },
+        {
+          title: "Understanding React Hooks",
+          author: "Jane Doe",
+          url: "https://myblog.com/react-hooks",
+          likes: 25,
+        },
+        {
+          title: "Mastering Node.js",
+          author: "John Smith",
+          url: "https://myblog.com/nodejs-mastery",
+          likes: 18,
+        },
+      ];
+
+    test('returns the blog with most likes',()=>{
+        const result = favoriteBlog(manyBlogs)
+        assert.deepStrictEqual(result,manyBlogs[1])
+    })
+
+})

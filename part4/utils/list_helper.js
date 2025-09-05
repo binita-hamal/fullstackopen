@@ -27,7 +27,6 @@ export const dummy = (blogs)=>{
 }
 
 export const totalLikes = (blogs)=>{
-
     let likes = blogs.map(b=>{
         return b.likes
     })
@@ -38,3 +37,11 @@ export const totalLikes = (blogs)=>{
 
 }
 
+
+export const favoriteBlog = (blogs)=>{
+
+    return blogs.reduce((max,blog)=>{
+        return blog.likes > max.likes ? blog : max
+    },blogs[0])
+    
+}
