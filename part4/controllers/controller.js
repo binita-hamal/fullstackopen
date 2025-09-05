@@ -17,6 +17,7 @@ export const getBlogs = async(req,res)=>{
 
 
 export const postBlogs =(req,res)=>{
+    
     const {title,author,url,likes} = req.body
     console.log(title,author,url,likes)
 
