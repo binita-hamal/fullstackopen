@@ -39,9 +39,41 @@ export const totalLikes = (blogs)=>{
 
 
 export const favoriteBlog = (blogs)=>{
-
     return blogs.reduce((max,blog)=>{
         return blog.likes > max.likes ? blog : max
     },blogs[0])
     
+}
+
+export const mostBlogs = (blogs)=>{
+
+    let hash={}
+    let allAuthors = blogs.map(b=>{
+        return b.author
+    })
+
+    //['bin','jhon','bin] 
+    for(let a of allAuthors){
+        hash[a] =( hash[a] || 0 ) + 1
+    }
+    //{
+    //"bini":2,
+    //"jhon":1
+    //}
+
+    let max=0
+    let maxAuthor
+
+    for(let author in hash){
+        if(hash[author] > max){
+            max = hash[author]
+            maxAuthor = author
+        }
+    }
+
+    return {
+        author:maxAuthor,
+        blogs:max
+    }
+
 }
