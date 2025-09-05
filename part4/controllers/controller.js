@@ -25,7 +25,7 @@ export const postBlogs =(req,res)=>{
         title,
         author,
         url,
-        likes
+        likes:likes ||0
     })
 
     newBlog.save().then(result=>{

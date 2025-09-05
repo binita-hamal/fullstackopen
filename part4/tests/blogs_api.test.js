@@ -117,6 +117,24 @@ describe("blog post method", async () => {
 
     const title = blogsAdded.map((b) => b.title);
     assert.ok(title.includes("digital technology"));
+
   });
+
+
+  test.only('verifies if the like property is missing from the request',async()=>{
+    let blog = {
+        title: "digital technology",
+        author: "hari",
+        url: "https://youtube.com",
+      };
+
+      const response = await api.post('/api/blogs')
+      .send(blog)
+      .expect(201)
+      .expect("Content-Type",/application\/json/)
+
+      assert.strictEqual(response.body.likes,0)
+
+  })
 
 });
