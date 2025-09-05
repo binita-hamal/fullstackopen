@@ -26,3 +26,15 @@ export const dummy = (blogs)=>{
     return 1;
 }
 
+export const totalLikes = (blogs)=>{
+
+    let likes = blogs.map(b=>{
+        return b.likes
+    })
+
+    return likes.reduce((acc,curr)=>{
+        return acc + curr
+    },0)
+
+}
+
