@@ -77,3 +77,32 @@ export const mostBlogs = (blogs)=>{
     }
 
 }
+
+export const mostLikes=(blogs)=>{
+    const hash={}
+    // let allAuthors = blogs.map(b=>{
+    //     return b.author
+    // })
+
+    for(let b of blogs){
+        hash[b.author] = (hash[b.author] || 0) + b.likes 
+    }
+
+    let max=0;
+    let maxAuthor
+
+    for(let author in hash){
+        if(hash[author] > max){
+            max = hash[author]
+            maxAuthor = author
+        }
+    }
+
+    return {
+        author:maxAuthor,
+        likes: max
+    }
+
+
+
+}
