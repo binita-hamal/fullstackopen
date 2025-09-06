@@ -53,7 +53,30 @@ export const deleteBlogs = async(req,res)=>{
     } catch (error) {
         res.status(500).json({error:"something went wrong"})
     }
-   
+
+}
+
+export const updateBlogs = async(req,res)=>{
+    try {
+        const id  = req.params.bid
+        const body = req.body
+
+        const update = await Blog.findByIdAndUpdate(
+            id,
+            body,
+        {new:true}
+    )
+
+    if(update){
+        res.json(update)
+    }
+    else{
+        res.status(404).end()
+    }
 
 
+    } catch (error) {
+        console.log(error)
+        
+    }
 }

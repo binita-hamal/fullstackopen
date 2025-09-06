@@ -183,3 +183,32 @@ describe("blog delete method",async()=>{
 })
 
 
+
+describe("blog put method",async()=>{
+    test.only('blogs likes can be updated', async()=>{
+        let blog = new Blog({
+            title: "technology",
+            author: "sita",
+            url: "https://youtube.com",
+            likes: 9,
+          });
+
+        const saveBlog = await blog.save()
+        const updateLike = {
+            likes :12
+        }
+
+        const response = await api.put(`/api/blogs/${saveBlog.id}`)
+        .send(updateLike)
+        .expect(200)
+        .expect('Content-Type',/application\/json/)
+
+        assert.strictEqual(response.body.likes,12)
+
+
+        const bloginDB= await Blog.findById(saveBlog.id)
+        assert.strictEqual(bloginDB.likes,12)
+
+    })
+})
+
