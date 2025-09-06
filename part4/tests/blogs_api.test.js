@@ -137,4 +137,27 @@ describe("blog post method", async () => {
 
   })
 
+  test.only('if title or url are missing, returns the status code 400 Bad Request',async()=>{
+    let noTitleBlog = {
+        author: "hari",
+        url: "https://youtube.com",
+      };
+
+      let noUrlBlog = {
+        title: "digital technology",
+        author: "shyam",
+      };
+
+      await api.post('/api/blogs')
+      .send(noTitleBlog).expect(400)
+
+      await api.post('/api/blogs')
+      .send(noUrlBlog).expect(400)
+
+
+  })
+
+
+
+
 });

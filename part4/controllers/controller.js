@@ -21,6 +21,10 @@ export const postBlogs =(req,res)=>{
     const {title,author,url,likes} = req.body
     console.log(title,author,url,likes)
 
+    if(!title || !url){
+        return res.status(400).json({error:'title or url missing'})
+    }
+
     const newBlog =new Blog({
         title,
         author,
