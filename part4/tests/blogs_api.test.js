@@ -157,7 +157,29 @@ describe("blog post method", async () => {
 
   })
 
-
-
-
 });
+
+
+describe("blog delete method",async()=>{
+    test.only('a blog can be deleted',async()=>{
+
+        let blog = new Blog({
+            title: "technology",
+            author: "sita",
+            url: "https://youtube.com",
+            likes: 9,
+          });
+
+        const saveBlog = await blog.save()
+
+        await api.delete(`/api/blogs/${saveBlog.id}`).expect(204)
+
+
+        const blogAfterDeletion = await Blog.find({})
+        const id = blogAfterDeletion.map(b=> b.id)
+        assert.ok(!id.includes(saveBlog.id))
+
+    })
+})
+
+

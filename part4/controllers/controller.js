@@ -37,3 +37,23 @@ export const postBlogs =(req,res)=>{
     })
 
 }
+
+
+export const deleteBlogs = async(req,res)=>{
+
+    try {
+        const id  = req.params.bid
+        const deleteBlog = await Blog.findByIdAndDelete(id)
+    
+        if(!deleteBlog){
+            return res.status(404).json({error:"Blog not found"})
+        }
+        res.status(204).end()
+        
+    } catch (error) {
+        res.status(500).json({error:"something went wrong"})
+    }
+   
+
+
+}
