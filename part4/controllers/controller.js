@@ -1,23 +1,19 @@
 import { Blog } from "../models/blog.js";
 import { User } from "../models/user.js";
-import jwt, { decode } from "jsonwebtoken"
+import jwt, { decode } from "jsonwebtoken";
 
 export const getBlogs = async (req, res) => {
   try {
-
-
     // Blog.find({}).then((blogs) => {
     //   res.json(blogs);
     // });
 
-    const blogs = await Blog.find({}).populate("user",{
-        username:1,
-        name:1
-    })
+    const blogs = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
 
-    res.json(blogs)
-
-
+    res.json(blogs);
   } catch (error) {
     console.log(error);
   }
@@ -28,13 +24,12 @@ export const postBlogs = async (req, res) => {
     const { title, author, url, likes } = req.body;
     const user = req.user;
 
-
     // if (!title || !url) {
     //   return res.status(400).json({ error: "title or url missing" });
     // }
 
-    if(!user){
-      return res.status(401).json({error:"token invalid or missing"})
+    if (!user) {
+      return res.status(401).json({ error: "token invalid or missing" });
     }
 
     const newBlog = new Blog({
@@ -55,58 +50,31 @@ export const postBlogs = async (req, res) => {
 };
 
 export const deleteBlogs = async (req, res) => {
+  const user = req.user;
+  const blog = await Blog.findById(req.params.id);
 
-  const authorization =req.get("authorization")
-    let token = null
-    if(authorization && authorization.toLowerCase().startsWith("bearer ")){
-      token = authorization.substring(7)
-    }
-
-    if(!token){
-      return res.status(401).json({error:"token missing or invalid"})
-    }
-    let decodedToken
-  try {
-    // const id = req.params.bid;
-    // const deleteBlog = await Blog.findByIdAndDelete(id);
-
-    // if (!deleteBlog) {
-    //   return res.status(404).json({ error: "Blog not found" });
-    // }
-    // res.status(204).end();
-
-    decodedToken  = jwt.verify(token,process.env.mySECRET)
-
-
-    
-
-
-
-  } catch (error) {
-    res.status(500).json({ error: "something went wrong" });
+  if (!blog) {
+    return res.status(404).json({ error: "blog not found" });
   }
 
-  if(!decodedToken.id){
-    return res.status(401).json({error:"token missing or invalid"})
+  if (blog.user.toString() !== decodedToken.id.toString()) {
+    return res.status(403).json({ error: "only creater can delete the blog" });
   }
 
-  const blog = await Blog.findById(req.params.id)
+  await Blog.findByIdAndRemove(req.params.id);
+  res.status(204).end();
 
-  if(!blog){
-    return res.status(404).json({error:"blog not found"})
-  }
+  // const id = req.params.bid;
+  // const deleteBlog = await Blog.findByIdAndDelete(id);
 
-  if(blog.user.toString() !== decodedToken.id.toString()){
-    return res.status(403).json({error:"only creater can delete the blog"})
-  }
+  // if (!deleteBlog) {
+  //   return res.status(404).json({ error: "Blog not found" });
+  // }
+  // res.status(204).end();
 
-  await Blog.findByIdAndRemove(req.params.id)
-  res.status(204).end()
-
-
-
-
-
+  // if(!decodedToken.id){
+  //   return res.status(401).json({error:"token missing or invalid"})
+  // }
 };
 
 export const updateBlogs = async (req, res) => {
