@@ -24,12 +24,16 @@ export const getBlogs = async (req, res) => {
 
 export const postBlogs = async (req, res) => {
   try {
-    const { title, author, url, likes } = req.body;
+    // const { title, author, url, likes } = req.body;
+    const user = req.user;
 
-    const user = await User.findOne();
 
-    if (!title || !url) {
-      return res.status(400).json({ error: "title or url missing" });
+    // if (!title || !url) {
+    //   return res.status(400).json({ error: "title or url missing" });
+    // }
+
+    if(!user){
+      return res.status(401).json({error:"token invalid or missing"})
     }
 
     const newBlog = new Blog({

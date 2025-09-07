@@ -1,0 +1,28 @@
+import jwt from "jsonwebtoken"
+import { User } from "../models/user.js"
+
+
+export const tokenExtractor = (req,res)=>{
+    const auth = req.get("authorization")
+
+    if(auth && auth.toLowerCase().startsWith("bearer ")){
+        req.token = auth.substring(7)
+    }
+}
+
+export const userExtractor = async(req,res)=>{
+    if(req.token){
+        try {
+            const decodedToken = jwt.verify(req.token,process.env.mySECRET)
+
+            if(!decodedToken){
+                return res.status(401).json({error:"token invalid"})
+            }
+
+            req.user = await User.findById(decodedToken.id)
+        } catch (error) {
+            return res.status(401).json({error:"token invalid"})
+            
+        }
+    }
+}
