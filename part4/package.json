@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-
   "scripts": {
     "test": "cross-env NODE_ENV=test node --test",
     "start": "node --watch index.js"
