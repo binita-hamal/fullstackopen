@@ -4,7 +4,6 @@ import { User } from "../models/user.js"
 
 export const tokenExtractor = (req,res)=>{
     const auth = req.get("authorization")
-
     if(auth && auth.toLowerCase().startsWith("bearer ")){
         req.token = auth.substring(7)
     }
