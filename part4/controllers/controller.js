@@ -1,82 +1,81 @@
 import { Blog } from "../models/blog.js";
+import { User } from "../models/user.js";
 
-export const getBlogs = async(req,res)=>{
-
-    try {
-        Blog.find({})
-        .then(blogs=>{
-            res.json(blogs)
-        })
-        
-    } catch (error) {
-        console.log(error)
-        
-    }
-   
-}
+export const getBlogs = async (req, res) => {
+  try {
 
 
-export const postBlogs =(req,res)=>{
-    
-    const {title,author,url,likes} = req.body
-    console.log(title,author,url,likes)
+    // Blog.find({}).then((blogs) => {
+    //   res.json(blogs);
+    // });
 
-    if(!title || !url){
-        return res.status(400).json({error:'title or url missing'})
-    }
-
-    const newBlog =new Blog({
-        title,
-        author,
-        url,
-        likes:likes ||0
+    const blogs = await Blog.find({}).populate("user",{
+        username:1,
+        name:1
     })
 
-    newBlog.save().then(result=>{
-        res.status(201).json(result)
-    })
-
-}
+    res.json(blogs)
 
 
-export const deleteBlogs = async(req,res)=>{
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    try {
-        const id  = req.params.bid
-        const deleteBlog = await Blog.findByIdAndDelete(id)
-    
-        if(!deleteBlog){
-            return res.status(404).json({error:"Blog not found"})
-        }
-        res.status(204).end()
-        
-    } catch (error) {
-        res.status(500).json({error:"something went wrong"})
+export const postBlogs = async (req, res) => {
+  try {
+    const { title, author, url, likes } = req.body;
+
+    const user = await User.findOne();
+
+    if (!title || !url) {
+      return res.status(400).json({ error: "title or url missing" });
     }
 
-}
+    const newBlog = new Blog({
+      title,
+      author,
+      url,
+      likes: likes || 0,
+      user: user._id,
+    });
 
-export const updateBlogs = async(req,res)=>{
-    try {
-        const id  = req.params.bid
-        const body = req.body
+    const savedBlog = await newBlog.save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
+    res.status(201).json(savedBlog);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-        const update = await Blog.findByIdAndUpdate(
-            id,
-            body,
-        {new:true}
-    )
+export const deleteBlogs = async (req, res) => {
+  try {
+    const id = req.params.bid;
+    const deleteBlog = await Blog.findByIdAndDelete(id);
 
-    if(update){
-        res.json(update)
+    if (!deleteBlog) {
+      return res.status(404).json({ error: "Blog not found" });
     }
-    else{
-        res.status(404).end()
-    }
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ error: "something went wrong" });
+  }
+};
 
+export const updateBlogs = async (req, res) => {
+  try {
+    const id = req.params.bid;
+    const body = req.body;
 
-    } catch (error) {
-        console.log(error)
-        
+    const update = await Blog.findByIdAndUpdate(id, body, { new: true });
+
+    if (update) {
+      res.json(update);
+    } else {
+      res.status(404).end();
     }
-}
+  } catch (error) {
+    console.log(error);
+  }
+};

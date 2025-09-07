@@ -4,7 +4,11 @@ import { User } from "../models/user.js"
 
 export const getUsers = async(req,res)=>{
     try {
-        const response = await User.find({})
+        const response = await User.find({}).populate("blogs",{
+            title:1,
+            author:1,
+            url:1
+        })
         res.send(response)
     } catch (error) {
         console.log(error)
