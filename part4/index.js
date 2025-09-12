@@ -1,7 +1,6 @@
 import app from "./app.js"
 import mongoose from "mongoose"
 
-
 const MONGODB  = process.env.NODE_ENV === 'test' ? process.env.TEST_MONGO_URL : process.env.MONGO_URL 
 // const MONGODB = process.env.TEST_MONGO_URL
 //database connection

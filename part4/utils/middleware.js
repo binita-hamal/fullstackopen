@@ -2,11 +2,12 @@ import jwt from "jsonwebtoken"
 import { User } from "../models/user.js"
 
 
-export const tokenExtractor = (req,res)=>{
+export const tokenExtractor = (req,res,next)=>{
     const auth = req.get("authorization")
     if(auth && auth.toLowerCase().startsWith("bearer ")){
         req.token = auth.substring(7)
     }
+    next()
 }
 
 export const userExtractor = async(req,res)=>{
@@ -24,4 +25,5 @@ export const userExtractor = async(req,res)=>{
             
         }
     }
+    next()
 }

@@ -5,10 +5,13 @@ import router from "./routes/blogsRouter.js"
 import userRouter from "./routes/usersRouter.js"
 import loginRouter from "./routes/loginRouter.js"
 import { tokenExtractor } from "./utils/middleware.js"
+import cors from "cors"
+
 dotenv.config()
 
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 
