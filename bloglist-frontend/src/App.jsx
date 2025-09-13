@@ -1,4 +1,4 @@
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login.js";
@@ -6,7 +6,6 @@ import BlogForm from "./components/BlogForm.jsx";
 import Notification from "./components/Notification.jsx";
 import LoginForm from "./components/LoginForm.jsx";
 import Togglable from "./components/Togglable.jsx";
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -18,9 +17,13 @@ const App = () => {
 
   const [notification, setNotification] = useState("");
 
-  const blogFormRef = useRef()
 
 
+
+
+
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -71,18 +74,16 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-
-
         <Notification message={notification} />
 
-<Togglable buttonLabel="log in">
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={(e) => setUserName(e.target.value)}
-          handlePasswordChange={(e) => setPassword(e.target.value)}
-          handleSubmit={handleLogin}
-        />
+        <Togglable buttonLabel="log in">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={(e) => setUserName(e.target.value)}
+            handlePasswordChange={(e) => setPassword(e.target.value)}
+            handleSubmit={handleLogin}
+          />
         </Togglable>
       </div>
     );
@@ -131,23 +132,24 @@ const App = () => {
       <Notification message={notification} />
 
       <span style={{ marginRight: "20px" }}>{user.name} logged in</span>
-      <button onClick={handleLogOut} style={{marginBottom:"20px"}}>log out</button>
+      <button onClick={handleLogOut} style={{ marginBottom: "20px" }}>
+        log out
+      </button>
 
-    
-   <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-
-      <BlogForm
-        addBlog={(blog) => {
-
-          blogFormRef.current.toggleVisibility() //hide after creating a blog
-          setBlogs(blogs.concat(blog));
-          showNotification(`a new blog ${blog.title} by ${blog.author} added`);
-        }}
-      />
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+        <BlogForm
+          addBlog={(blog) => {
+            blogFormRef.current.toggleVisibility(); //hide after creating a blog
+            setBlogs(blogs.concat(blog));
+            showNotification(
+              `a new blog ${blog.title} by ${blog.author} added`
+            );
+          }}
+        />
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} /> 
       ))}
     </div>
   );
