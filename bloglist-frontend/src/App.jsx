@@ -4,6 +4,9 @@ import blogService from "./services/blogs";
 import loginService from "./services/login.js";
 import BlogForm from "./components/BlogForm.jsx";
 import Notification from "./components/Notification.jsx";
+import LoginForm from "./components/LoginForm.jsx";
+import Togglable from "./components/Togglable.jsx";
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,7 +16,9 @@ const App = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  const [notification,setNotification] = useState("")
+  const [notification, setNotification] = useState("");
+
+
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -29,14 +34,12 @@ const App = () => {
     }
   }, []);
 
-  const showNotification = (message)=>{
-    setNotification(message)
-    setTimeout(()=> setNotification(""),5000)
-  }
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => setNotification(""), 5000);
+  };
 
-
-
-  async function handleSubmit(e) {
+  async function handleLogin(e) {
     e.preventDefault();
     try {
       const user = await loginService.login({
@@ -50,11 +53,11 @@ const App = () => {
       blogService.setToken(user.token);
       setUserName("");
       setPassword("");
-      
-      showNotification(`Welcome ${user.name}!`)
+
+      showNotification(`Welcome ${user.name}!`);
     } catch (error) {
       console.log(error);
-      showNotification(`wrong username or password`)
+      showNotification(`wrong username or password`);
     }
   }
 
@@ -66,55 +69,78 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <h2>Log in to application</h2>
 
-        <Notification message={notification}/>
 
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>
-              username:
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUserName(e.target.value)}
-              />
-            </label>
-          </div>
+        <Notification message={notification} />
 
-          <label>
-            password:{" "}
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-
-          <div>
-            <button>login</button>
-          </div>
-        </form>
+<Togglable buttonLabel="log in">
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={(e) => setUserName(e.target.value)}
+          handlePasswordChange={(e) => setPassword(e.target.value)}
+          handleSubmit={handleLogin}
+        />
+        </Togglable>
       </div>
     );
   }
+
+  // if (user === null) {
+  //   return (
+  //     <div>
+  //       <h2>Log in to application</h2>
+
+  //       <Notification message={notification} />
+
+  //       <form onSubmit={handleSubmit}>
+  //         <div>
+  //           <label>
+  //             username:
+  //             <input
+  //               type="text"
+  //               value={username}
+  //               onChange={(e) => setUserName(e.target.value)}
+  //             />
+  //           </label>
+  //         </div>
+
+  //         <label>
+  //           password:{" "}
+  //           <input
+  //             type="password"
+  //             value={password}
+  //             onChange={(e) => setPassword(e.target.value)}
+  //           />
+  //         </label>
+
+  //         <div>
+  //           <button>login</button>
+  //         </div>
+  //       </form>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
       <h2>blogs</h2>
 
-      <Notification message={notification}/>
+      <Notification message={notification} />
 
-      <p>{user.name} logged in</p>
+      <span style={{ marginRight: "20px" }}>{user.name} logged in</span>
+      <button onClick={handleLogOut} style={{marginBottom:"20px"}}>log out</button>
 
-      <button onClick={handleLogOut}>log out</button>
+    
+   <Togglable buttonLabel="create new blog">
 
-      <BlogForm addBlog={(blog) => {
-
-      setBlogs(blogs.concat(blog))
-      showNotification(`a new blog ${blog.title} by ${blog.author} added`)
-      }
-      } />
+      <BlogForm
+        addBlog={(blog) => {
+          setBlogs(blogs.concat(blog));
+          showNotification(`a new blog ${blog.title} by ${blog.author} added`);
+        }}
+      />
+      </Togglable>
 
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />

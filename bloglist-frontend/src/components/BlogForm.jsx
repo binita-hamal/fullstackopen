@@ -58,7 +58,9 @@ function BlogForm({addBlog}) {
             />
         </div>
 
-        <button style={{marginTop:"20px", marginBottom:"20px"}}>Create blog</button>
+        <button style={{marginTop:"20px", marginBottom:"20px",marginRight:"10px"}}>create</button>
+       
+
         </form>
        
     </>
