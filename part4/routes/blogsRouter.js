@@ -6,8 +6,8 @@ const router = express.Router();
 
 
 router.get('/',getBlogs)
-router.post('/',postBlogs,userExtractor,tokenExtractor)
-router.delete('/:bid',deleteBlogs,userExtractor,tokenExtractor)
+router.post('/',tokenExtractor,userExtractor,postBlogs)
+router.delete('/:bid',tokenExtractor,userExtractor,deleteBlogs)
 router.put('/:bid',updateBlogs)
 
 

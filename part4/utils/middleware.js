@@ -10,7 +10,7 @@ export const tokenExtractor = (req,res,next)=>{
     next()
 }
 
-export const userExtractor = async(req,res)=>{
+export const userExtractor = async(req,res,next)=>{
     if(req.token){
         try {
             const decodedToken = jwt.verify(req.token,process.env.mySECRET)
