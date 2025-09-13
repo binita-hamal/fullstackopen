@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login.js";
@@ -17,6 +17,8 @@ const App = () => {
   const [password, setPassword] = useState("");
 
   const [notification, setNotification] = useState("");
+
+  const blogFormRef = useRef()
 
 
 
@@ -132,10 +134,12 @@ const App = () => {
       <button onClick={handleLogOut} style={{marginBottom:"20px"}}>log out</button>
 
     
-   <Togglable buttonLabel="create new blog">
+   <Togglable buttonLabel="create new blog" ref={blogFormRef}>
 
       <BlogForm
         addBlog={(blog) => {
+
+          blogFormRef.current.toggleVisibility() //hide after creating a blog
           setBlogs(blogs.concat(blog));
           showNotification(`a new blog ${blog.title} by ${blog.author} added`);
         }}
