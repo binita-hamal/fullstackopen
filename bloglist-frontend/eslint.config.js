@@ -34,6 +34,11 @@ export default [
         { allowConstantExport: true },
       ],
       'react/prop-types': 0,
+
+      indent: ['error', 2],
+      'linebreak-style': ['error', 'unix'],
+      'object-curly-spacing': ['error', 'always'],
+      'no-console': 'off',
     },
   },
 ]

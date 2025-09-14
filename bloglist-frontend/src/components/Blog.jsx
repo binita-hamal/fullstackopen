@@ -3,7 +3,6 @@ import blogService from "../services/blogs";
 
 function Blog({ blog, setBlogs, blogs, user }) {
   const [view, setView] = useState(false);
-
   function handleView() {
     setView(!view);
   }
@@ -20,6 +19,7 @@ function Blog({ blog, setBlogs, blogs, user }) {
       setBlogs(blogs.filter((b) => b.id !== blog.id));
     } catch (error) {
       console.error("Failed to delete blog:", error);
+
       alert("An error occurred while deleting the blog.");
     }
   };
@@ -39,7 +39,6 @@ function Blog({ blog, setBlogs, blogs, user }) {
       alert("An error occurred while liking the blog.");
     }
   };
-
   return (
     <>
       <div
@@ -76,7 +75,7 @@ function Blog({ blog, setBlogs, blogs, user }) {
             (
               <button
                 style={{
-                  backgroundColor: "red", 
+                  backgroundColor: "red",
                   border: "2px solid black",
                   color: "white",
                   marginTop: 10,
