@@ -9,7 +9,6 @@ import Togglable from "./components/Togglable.jsx";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-
   const [user, setUser] = useState(null);
 
   const [username, setUserName] = useState("");
@@ -19,8 +18,16 @@ const App = () => {
 
   const blogFormRef = useRef();
 
+  // useEffect(() => {
+  //   blogService.getAll().then((blogs) => setBlogs(blogs));
+  // }, []);
+
+  //sorted likes in descending order
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => {
+      const sorted = blogs.sort((a, b) => b.likes - a.likes);
+      setBlogs(sorted);
+    });
   }, []);
 
   useEffect(() => {
@@ -46,10 +53,17 @@ const App = () => {
         password,
       });
 
-      localStorage.setItem("loggedUser", JSON.stringify(user));
+      const userToSave = {
+        token: user.token,
+        username: user.username,
+        name: user.name,
+        id: user.id,
+      };
 
-      setUser(user);
-      blogService.setToken(user.token);
+      localStorage.setItem("loggedUser", JSON.stringify(userToSave));
+
+      setUser(userToSave);
+      blogService.setToken(userToSave.token);
       setUserName("");
       setPassword("");
 
@@ -107,7 +121,13 @@ const App = () => {
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog blogs={blogs} setBlogs={setBlogs} key={blog.id} blog={blog} />
+        <Blog
+          user={user}
+          blogs={blogs}
+          setBlogs={setBlogs}
+          key={blog.id}
+          blog={blog}
+        />
       ))}
     </div>
   );

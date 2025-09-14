@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/',getBlogs)
 router.post('/',tokenExtractor,userExtractor,postBlogs)
-router.delete('/:bid',tokenExtractor,userExtractor,deleteBlogs)
+router.delete('/:id',tokenExtractor,userExtractor,deleteBlogs)
 router.put('/:bid',updateBlogs)
 
 
