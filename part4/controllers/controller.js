@@ -7,7 +7,6 @@ export const getBlogs = async (req, res) => {
       name: 1,
       _id: 1,
     });
-
     res.json(blogs);
   } catch (error) {
     console.log(error);
