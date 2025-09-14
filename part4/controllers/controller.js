@@ -82,6 +82,16 @@ export const updateBlogs = async (req, res) => {
     const id = req.params.bid;
     const body = req.body;
 
+    const blog={
+      title:body.title,
+      author:body.author,
+      url:body.url,
+      likes:body.likes,
+      user: body.user
+    }
+
+
+
     const update = await Blog.findByIdAndUpdate(id, body, { new: true });
 
     if (update) {
