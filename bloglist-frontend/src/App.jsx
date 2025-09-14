@@ -17,12 +17,6 @@ const App = () => {
 
   const [notification, setNotification] = useState("");
 
-
-
-
-
-
-
   const blogFormRef = useRef();
 
   useEffect(() => {
@@ -89,42 +83,6 @@ const App = () => {
     );
   }
 
-  // if (user === null) {
-  //   return (
-  //     <div>
-  //       <h2>Log in to application</h2>
-
-  //       <Notification message={notification} />
-
-  //       <form onSubmit={handleSubmit}>
-  //         <div>
-  //           <label>
-  //             username:
-  //             <input
-  //               type="text"
-  //               value={username}
-  //               onChange={(e) => setUserName(e.target.value)}
-  //             />
-  //           </label>
-  //         </div>
-
-  //         <label>
-  //           password:{" "}
-  //           <input
-  //             type="password"
-  //             value={password}
-  //             onChange={(e) => setPassword(e.target.value)}
-  //           />
-  //         </label>
-
-  //         <div>
-  //           <button>login</button>
-  //         </div>
-  //       </form>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div>
       <h2>blogs</h2>
@@ -149,10 +107,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map((blog) => (
-          <Blog
-          blogs={blogs}
-          setBlogs={setBlogs}
-           key={blog.id} blog={blog} /> 
+        <Blog blogs={blogs} setBlogs={setBlogs} key={blog.id} blog={blog} />
       ))}
     </div>
   );
