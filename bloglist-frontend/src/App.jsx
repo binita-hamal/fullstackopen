@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import Blog from './components/Blog';
-import blogService from './services/blogs';
-import loginService from './services/login.js';
-import BlogForm from './components/BlogForm.jsx';
-import Notification from './components/Notification.jsx';
-import LoginForm from './components/LoginForm.jsx';
-import Togglable from './components/Togglable.jsx'
+import { useState, useEffect, useRef } from "react";
+import Blog from "./components/Blog";
+import blogService from "./services/blogs";
+import loginService from "./services/login.js";
+import BlogForm from "./components/BlogForm.jsx";
+import Notification from "./components/Notification.jsx";
+import LoginForm from "./components/LoginForm.jsx";
+import Togglable from "./components/Togglable.jsx";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -23,6 +23,12 @@ const App = () => {
   // }, []);
 
   //sorted likes in descending order
+
+  function handleLike(){
+    console.log(blogs.title)
+  }
+
+
   useEffect(() => {
     blogService.getAll().then((blogs) => {
       const sorted = blogs.sort((a, b) => b.likes - a.likes);
@@ -79,58 +85,63 @@ const App = () => {
     setUser(null);
   }
 
-  if (user === null) {
+
+
+    if (user === null) {
+      return (
+        <div>
+          <Notification message={notification} />
+
+          <Togglable buttonLabel="log in">
+            <LoginForm
+              username={username}
+              password={password}
+              handleUsernameChange={(e) => setUserName(e.target.value)}
+              handlePasswordChange={(e) => setPassword(e.target.value)}
+              handleSubmit={handleLogin}
+            />
+          </Togglable>
+        </div>
+      );
+    }
+
     return (
       <div>
+        <h2>blogs</h2>
+
         <Notification message={notification} />
 
-        <Togglable buttonLabel="log in">
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={(e) => setUserName(e.target.value)}
-            handlePasswordChange={(e) => setPassword(e.target.value)}
-            handleSubmit={handleLogin}
+        <span style={{ marginRight: "20px" }}>{user.name} logged in</span>
+        <button onClick={handleLogOut} style={{ marginBottom: "20px" }}>
+          log out
+        </button>
+
+        <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+          <BlogForm
+            addBlog={(blog) => {
+              blogFormRef.current.toggleVisibility(); //hide after creating a blog
+              setBlogs(blogs.concat(blog));
+              showNotification(
+                `a new blog ${blog.title} by ${blog.author} added`
+              );
+            }}
           />
         </Togglable>
+
+        {blogs.map((blog) => (
+          <Blog
+            user={user}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            key={blog.id}
+            blog={blog}
+            handleLike={handleLike}
+
+
+          />
+        ))}
       </div>
     );
-  }
-
-  return (
-    <div>
-      <h2>blogs</h2>
-
-      <Notification message={notification} />
-
-      <span style={{ marginRight: "20px" }}>{user.name} logged in</span>
-      <button onClick={handleLogOut} style={{ marginBottom: "20px" }}>
-        log out
-      </button>
-
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm
-          addBlog={(blog) => {
-            blogFormRef.current.toggleVisibility(); //hide after creating a blog
-            setBlogs(blogs.concat(blog));
-            showNotification(
-              `a new blog ${blog.title} by ${blog.author} added`
-            );
-          }}
-        />
-      </Togglable>
-
-      {blogs.map((blog) => (
-        <Blog
-          user={user}
-          blogs={blogs}
-          setBlogs={setBlogs}
-          key={blog.id}
-          blog={blog}
-        />
-      ))}
-    </div>
-  );
-};
+  };
 
 export default App;

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Blog from "./Blog";
-import { describe, expect } from "vitest";
-import userEvent from "@testing-library/user-event"
+import { describe, expect ,vi} from "vitest";
+import userEvent from "@testing-library/user-event";
 
 describe("<Blog/>", () => {
   const blog = {
@@ -17,36 +17,56 @@ describe("<Blog/>", () => {
       <Blog blog={blog} blogs={[]} setBlogs={() => {}} user={{ id: "124" }} />
     );
 
-    const summary = screen.getByText("react testing John doe")
-    expect(summary).toBeDefined()
+    const summary = screen.getByText("react testing John doe");
+    expect(summary).toBeDefined();
 
-    const url =screen.queryByText("http://google.com")
-    const likes = screen.queryByText(/likes/i)
+    const url = screen.queryByText("http://google.com");
+    const likes = screen.queryByText(/likes/i);
 
-    expect(url).not.toBeInTheDocument()
-    expect(likes).not.toBeInTheDocument()
-
+    expect(url).not.toBeInTheDocument();
+    expect(likes).not.toBeInTheDocument();
   });
 
-  test('renders URL and number of likes when view button is clicked', async()=>{
-
+  test("renders URL and number of likes when view button is clicked", async () => {
     render(
       <Blog blog={blog} blogs={[]} setBlogs={() => {}} user={{ id: "124" }} />
     );
 
-    const user = userEvent.setup()
-    const button = screen.getByText("view")
-    await user.click(button)
+    const user = userEvent.setup();
+    const button = screen.getByText("view");
+    await user.click(button);
 
     //after clicking the view button
 
-    const url =screen.getByText("http://google.com")
-    const likes = screen.getByText(/likes 7/i)
+    const url = screen.getByText("http://google.com");
+    const likes = screen.getByText(/likes 7/i);
 
-    expect(url).toBeInTheDocument()
-    expect(likes).toBeInTheDocument()
+    expect(url).toBeInTheDocument();
+    expect(likes).toBeInTheDocument();
+  });
 
-  })
+  test("when like button is called twice, the event handler the component received as props is called twice", async () => {
+    const mockHandler = vi.fn();
 
+    render(
+      <Blog
+        blog={blog}
+        blogs={[]}
+        setBlogs={() => {}}
+        user={{ id: "124" }}
+        handleLike={mockHandler}
+      />
+    );
 
+    const user = userEvent.setup();
+
+    const viewButton = screen.getByText("view");
+    await user.click(viewButton);
+
+    const likeButton = screen.getByText("like");
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(mockHandler).toHaveBeenCalledTimes(2);
+  });
 });

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-function Blog({ blog, setBlogs, blogs, user }) {
+function Blog({ blog, setBlogs, blogs, user, handleLike }) {
   const [view, setView] = useState(false);
   function handleView() {
     setView(!view);
@@ -24,21 +24,27 @@ function Blog({ blog, setBlogs, blogs, user }) {
     }
   };
 
-  const handleLike = async () => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id || blog.user._id,
-    };
-
-    try {
-      const returnBlog = await blogService.update(blog.id, updatedBlog);
-      setBlogs(blogs.map((b) => (b.id === returnBlog.id ? returnBlog : b)));
-    } catch (error) {
-      console.error("Failed to like blog:", error);
-      alert("An error occurred while liking the blog.");
+  const likeBlog = async () => {
+    if (handleLike) {
+      handleLike(blog);
+      return;
     }
-  };
+      
+      const updatedBlog = {
+        ...blog,
+        likes: blog.likes + 1,
+        user: blog.user.id || blog.user._id,
+      };
+
+      try {
+        const returnBlog = await blogService.update(blog.id, updatedBlog);
+        setBlogs(blogs.map((b) => (b.id === returnBlog.id ? returnBlog : b)));
+      } catch (error) {
+        console.error("Failed to like blog:", error);
+        alert("An error occurred while liking the blog.");
+      }
+    };
+  
   return (
     <>
       <div
@@ -70,7 +76,7 @@ function Blog({ blog, setBlogs, blogs, user }) {
 
           <div className="blog-likes">
             likes {blog.likes}
-            <button onClick={handleLike}>like</button>
+            <button onClick={likeBlog}>like</button>
           </div>
 
           <div className="blog-author">{blog.author}</div>
