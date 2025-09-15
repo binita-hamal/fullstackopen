@@ -48,13 +48,17 @@ function Blog({ blog, setBlogs, blogs, user }) {
           paddingLeft: 2,
           marginBottom: 5,
         }}
+        className="blog"
       >
-        {blog.title} {blog.author}
-        <button onClick={handleView}>{view ? "hide" : "view"}</button>
+        <div className="blog-summary">
+          {blog.title} {blog.author}
+          <button onClick={handleView}>{view ? "hide" : "view"}</button>
+        </div>
       </div>
 
       {view && (
         <div
+          className="blog-details"
           style={{
             border: "1px solid green",
             paddingTop: 10,
@@ -62,18 +66,20 @@ function Blog({ blog, setBlogs, blogs, user }) {
             marginBottom: 5,
           }}
         >
-          <div>{blog.url}</div>
+          <div className="blog-url">{blog.url}</div>
 
-          <div>
+          <div className="blog-likes">
             likes {blog.likes}
             <button onClick={handleLike}>like</button>
           </div>
-          <div>{blog.author}</div>
+
+          <div className="blog-author">{blog.author}</div>
 
           {canDelete &&
             (console.log("Rendering remove button"),
             (
               <button
+                className="blog-remove"
                 style={{
                   backgroundColor: "red",
                   border: "2px solid black",
