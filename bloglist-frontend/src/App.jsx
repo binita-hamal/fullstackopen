@@ -62,7 +62,7 @@ const App = () => {
       const userToSave = {
         token: user.token,
         username: user.username,
-        name: user.name,
+        // name: user.name,
         id: user.id,
       };
 
@@ -73,7 +73,7 @@ const App = () => {
       setUserName("");
       setPassword("");
 
-      showNotification(`Welcome ${user.name}!`);
+      showNotification(`Welcome ${user.username}!`);
     } catch (error) {
       console.log(error);
       showNotification(`wrong username or password`);
@@ -111,7 +111,7 @@ const App = () => {
 
         <Notification message={notification} />
 
-        <span style={{ marginRight: "20px" }}>{user.name} logged in</span>
+        <span style={{ marginRight: "20px" }}>{user.username} logged in</span>
         <button onClick={handleLogOut} style={{ marginBottom: "20px" }}>
           log out
         </button>
