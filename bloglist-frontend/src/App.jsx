@@ -24,8 +24,25 @@ const App = () => {
 
   //sorted likes in descending order
 
-  function handleLike(){
-    console.log(blogs.title)
+  // function handleLike(){
+  //   console.log(blogs.title)
+  // }
+  async function handleLike(blog) {
+     const updatedBlog = {
+            ...blog,
+            likes: blog.likes + 1,
+            user: blog.user.id || blog.user._id,
+          };
+
+          try {
+            const returnBlog = await blogService.update(blog.id, updatedBlog);
+            setBlogs(blogs.map((b) => (b.id === returnBlog.id ? returnBlog : b)));
+    
+            
+          } catch (error) {
+            console.error("Failed to like blog:", error);
+            alert("An error occurred while liking the blog.");
+          }
   }
 
 
