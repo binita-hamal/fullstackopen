@@ -82,29 +82,62 @@ describe("Blog app", () => {
     }) => {
       // await page.getByRole("button", { name: /view/i }).click();
 
-      const title = "monster" + Date.now()
-
+      const title = "monster" + Date.now();
       await page.getByRole("button", { name: /create new blog/i }).click();
-
       await page.getByLabel("title").fill(title);
       await page.getByLabel("author").fill("test author");
       await page.getByLabel("url").fill("test.com");
       await page.getByRole("button", { name: /^create$/i }).click();
 
       const blogCard = page.getByTestId(/blog-/).filter({
-        has: page.getByText(title)
-      })
+        has: page.getByText(title),
+      });
+
+      await blogCard.getByRole("button", { name: /view/i }).click();
+      await expect(blogCard.getByText(/likes 0/)).toBeVisible();
+      await blogCard.getByRole("button", { name: /like/i }).click();
+      await expect(blogCard.getByText(/likes 1/)).toBeVisible();
+    });
+
+
+    test("the user who added the blog can delete the blog", async({page})=>{
+      const title = "test" + Date.now();
+      await page.getByRole("button", { name: /create new blog/i }).click();
+      await page.getByLabel("title").fill(title);
+      await page.getByLabel("author").fill("test bini");
+      await page.getByLabel("url").fill("fifi.com");
+      await page.getByRole("button", { name: /^create$/i }).click();
+
+      const blogCard = page.getByTestId(/blog-/).filter({
+        has: page.getByText(title),
+      });
 
       await blogCard.getByRole("button", { name: /view/i }).click();
 
-      await expect(blogCard.getByText(/likes 0/)).toBeVisible()
-      await blogCard.getByRole("button", {name: /like/i}).click()
 
-      await expect(blogCard.getByText(/likes 1/)).toBeVisible()
+      page.once("dialog",async(dialog)=>{
+        expect(dialog.type()).toBe("confirm")
+        await dialog.accept()
+      })
+
+      await blogCard.getByRole("button", { name: /remove/i }).click();
 
 
 
-  
-    });
+
+
+      await expect(blogCard).not.toBeVisible()
+ 
+    })
+
+
+
+
+
+
+
+
+
+
   });
 });
