@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+const api_key = import.meta.env.VITE_API_KEY;
 
-const CountryList = ({ countries,handleShow }) => {
+const CountryList = ({ countries, handleShow }) => {
+  if (countries.length === 0) return null;
   if (countries.length > 10) {
     return <p>Too many matches,specify another filter</p>;
   }
@@ -9,25 +11,38 @@ const CountryList = ({ countries,handleShow }) => {
     return (
       <div>
         {countries.map((c) => (
-          <>
-            <p>
-              {c.name.common}
-              <button onClick={()=>handleShow(c)}>show</button>
-            </p>
-          </>
+          <p key={c.cca3}>
+            {c.name.common}
+            <button onClick={() => handleShow(c)}>show</button>
+          </p>
         ))}
       </div>
     );
   }
 
   if (countries.length === 1) {
-    return <CountryDetails country={countries[0]}/>
-    
+    return <CountryDetails country={countries[0]} />;
   }
 };
 
+const CountryDetails = ({ country }) => {
+  const [weather, setWeather] = useState(null);
+  const capital = country.capital ? country.capital[0] : null;
 
-const CountryDetails = ({country})=>{
+  console.log("API KEY:", import.meta.env.VITE_API_KEY);
+
+  useEffect(() => {
+    if (!capital) return;
+
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${api_key}&units=metric`
+      )
+      .then((res) => {
+        setWeather(res.data);
+      });
+  }, [capital]);
+
   return (
     <div>
       <h2>{country.name.common}</h2>
@@ -43,15 +58,25 @@ const CountryDetails = ({country})=>{
       </ul>
 
       <img src={country.flags.png} />
+
+      {weather && (
+        <div>
+          <h3>Weather in {capital}</h3>
+          <p>temperature {weather.main.temp} C</p>
+          <img
+            src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+          />
+          <p>wind {weather.wind.speed} m/s</p>
+        </div>
+      )}
     </div>
   );
-
-}
+};
 
 function App() {
   const [input, setInput] = useState("");
   const [countries, setCountries] = useState([]);
-  const [selectedCountry,setSelectedCountry] = useState(null)
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     axios
@@ -63,7 +88,7 @@ function App() {
         );
 
         setCountries(filterCountries);
-        selectedCountry(null)
+        setSelectedCountry(null);
       });
   }, [input]);
 
@@ -75,13 +100,10 @@ function App() {
       </div>
 
       {selectedCountry ? (
-        <CountryDetails country={selectedCountry}/>
-      ) :(
-        <CountryList countries={countries} handleShow={setSelectedCountry}/>
-
-      )
-      }
-
+        <CountryDetails country={selectedCountry} />
+      ) : (
+        <CountryList countries={countries} handleShow={setSelectedCountry} />
+      )}
     </>
   );
 }
