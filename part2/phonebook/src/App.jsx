@@ -56,7 +56,27 @@ function App() {
         service.update(existingPerson.id, updatePerson)
         .then((pe) => {
           setPersons(persons.map((p) => (p.id === existingPerson.id ? pe : p)));
-        });
+
+          setNotification({message:`Updated ${pe.name}`,type:"success"})
+
+          setTimeout(()=> setNotification({message:null, type:null}),5000)
+        })
+        .catch(err=>{
+          if(err.response && err.response.status === 404){
+            
+            setNotification({
+              message: `Information of ${existingPerson.name} has already been removed from server`,
+              type:"error"
+            })
+            setPersons(persons.filter((p)=> p.id !== existingPerson.id))
+          }
+            else{
+              setNotification({message:"Updated failed", type:"error"})
+            }
+            setTimeout(()=> setNotification({message:null,type:null}),5000)
+            console.log(err)
+          
+        })
 
         setInputText("")
         setInputNum("")
@@ -77,7 +97,7 @@ function App() {
       .then((res) => {
         setPersons([...persons, res.data]);
 
-        setNotification({message: `Added ${inputText}`, type:"sucess"})
+        setNotification({message: `Added ${inputText}`, type:"success"})
 
 
         setTimeout(()=>{
