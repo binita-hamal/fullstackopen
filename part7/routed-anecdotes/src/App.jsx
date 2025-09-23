@@ -102,14 +102,14 @@ const CreateNew = ({addNew,setNotification}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addNew({
-      content:content.value,
-      author:author.value,
-      info:info.value,
+      content:content.inputFieldProps.value,
+      author:author.inputFieldProps.value,
+      info:info.inputFieldProps.value,
       votes: 0,
     });
 
     //show notification
-   setNotification(`a new anecdote ${content.value} created!`)
+   setNotification(`a new anecdote ${content.inputFieldProps.value} created!`)
 
     //redirect to "/"(list of anecdotes)
     navigate("/");
@@ -132,19 +132,19 @@ const CreateNew = ({addNew,setNotification}) => {
         <div>
           content
           <input
-            {...content}
+            {...content.inputFieldProps}
           />
         </div>
         <div>
           author
           <input
-            {...author}
+            {...author.inputFieldProps}
           />
         </div>
         <div>
           url for more info
           <input
-           {...info}
+           {...info.inputFieldProps}
           />
         </div>
         <button>create</button>
