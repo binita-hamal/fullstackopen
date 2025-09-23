@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 
+//import custom hooks
+import { useField } from "./hooks";
+
 const Menu = () => {
   const padding = {
     paddingRight: 5,
@@ -84,9 +87,13 @@ const Footer = () => (
 );
 
 const CreateNew = ({addNew,setNotification}) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  // const [content, setContent] = useState("");
+  // const [author, setAuthor] = useState("");
+  // const [info, setInfo] = useState("");
+
+  const content = useField("text")
+  const author = useField("text")
+  const info = useField("text")
 
 
   const navigate = useNavigate();
@@ -94,14 +101,14 @@ const CreateNew = ({addNew,setNotification}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     addNew({
-      content,
-      author,
-      info,
+      content:content.value,
+      author:author.value,
+      info:info.value,
       votes: 0,
     });
 
     //show notification
-   setNotification(`a new anecdote ${content} created!`)
+   setNotification(`a new anecdote ${content.value} created!`)
 
     //redirect to "/"(list of anecdotes)
     navigate("/");
@@ -118,25 +125,19 @@ const CreateNew = ({addNew,setNotification}) => {
         <div>
           content
           <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            {...content}
           />
         </div>
         <div>
           author
           <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            {...author}
           />
         </div>
         <div>
           url for more info
           <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
+           {...info}
           />
         </div>
         <button>create</button>
