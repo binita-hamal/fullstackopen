@@ -96,6 +96,7 @@ const CreateNew = ({addNew,setNotification}) => {
   const info = useField("text")
 
 
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -117,6 +118,12 @@ const CreateNew = ({addNew,setNotification}) => {
       setNotification("");
     }, 5000);
   };
+
+  const handleReset = ()=>{
+    content.reset()
+    author.reset()
+    info.reset()
+  }
 
   return (
     <div>
@@ -141,6 +148,9 @@ const CreateNew = ({addNew,setNotification}) => {
           />
         </div>
         <button>create</button>
+        <button type="button" onClick={handleReset}>reset</button>
+
+
       </form>
     </div>
   );
