@@ -1,45 +1,57 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const CountryList = ({ countries }) => {
+const CountryList = ({ countries,handleShow }) => {
   if (countries.length > 10) {
     return <p>Too many matches,specify another filter</p>;
   }
   if (countries.length > 1) {
     return (
-      <ul>
+      <div>
         {countries.map((c) => (
-          <li>{c.name.common}</li>
+          <>
+            <p>
+              {c.name.common}
+              <button onClick={()=>handleShow(c)}>show</button>
+            </p>
+          </>
         ))}
-      </ul>
+      </div>
     );
   }
 
   if (countries.length === 1) {
-    const country = countries[0];
-    return (
-      <div>
-        <h2>{country.name.common}</h2>
-        <p>capital {country.capital ? country.capital[0] : "N/A"}</p>
-        <p>area {country.area}</p>
-
-        <h3>languages:</h3>
-        <ul>
-          {country.languages &&
-            Object.values(country.languages).map((lang) => (
-              <li key={lang}>{lang}</li>
-            ))}
-        </ul>
-
-        <img src={country.flags.png} />
-      </div>
-    );
+    return <CountryDetails country={countries[0]}/>
+    
   }
 };
+
+
+const CountryDetails = ({country})=>{
+  return (
+    <div>
+      <h2>{country.name.common}</h2>
+      <p>capital {country.capital ? country.capital[0] : "N/A"}</p>
+      <p>area {country.area}</p>
+
+      <h3>languages:</h3>
+      <ul>
+        {country.languages &&
+          Object.values(country.languages).map((lang) => (
+            <li key={lang}>{lang}</li>
+          ))}
+      </ul>
+
+      <img src={country.flags.png} />
+    </div>
+  );
+
+}
 
 function App() {
   const [input, setInput] = useState("");
   const [countries, setCountries] = useState([]);
+  const [selectedCountry,setSelectedCountry] = useState(null)
 
   useEffect(() => {
     axios
@@ -51,6 +63,7 @@ function App() {
         );
 
         setCountries(filterCountries);
+        selectedCountry(null)
       });
   }, [input]);
 
@@ -61,7 +74,14 @@ function App() {
         <input value={input} onChange={(e) => setInput(e.target.value)} />
       </div>
 
-      <CountryList countries={countries} />
+      {selectedCountry ? (
+        <CountryDetails country={selectedCountry}/>
+      ) :(
+        <CountryList countries={countries} handleShow={setSelectedCountry}/>
+
+      )
+      }
+
     </>
   );
 }
