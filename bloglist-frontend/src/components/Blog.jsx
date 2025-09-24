@@ -149,7 +149,7 @@ function Blog({ blog, setBlogs, blogs, user, handleLike }) {
   };
 
   const likeBlog = async () => {
-    handleLike(blog)
+    await handleLike(blog)
     };
   
   return (
@@ -183,7 +183,7 @@ function Blog({ blog, setBlogs, blogs, user, handleLike }) {
           <div className="blog-url">{blog.url}</div>
 
           <div className="blog-likes">
-            likes {blog.likes}
+            likes <span data-testid="like-count">{blog.likes}</span>
             <button onClick={likeBlog}>like</button>
           </div>
 

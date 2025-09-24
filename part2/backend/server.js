@@ -51,6 +51,8 @@ app.use(express.json())
 // app.use(morgan('tiny'))
 app.use(cors())
 
+app.use(express.static('dist'))
+
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
 )
@@ -201,7 +203,7 @@ const errorHandler = (error, req, res, next) => {
 }
 app.use(errorHandler)
 
-const port = process.env.port || 3001
+const port = process.env.port ? process.env.port : 3001
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

@@ -16,7 +16,8 @@ describe("Blog app", () => {
 
   test("when clicking login button, login form is shown", async ({ page }) => {
     const loginButton = page.getByRole("button", { name: /log in/i });
-    await expect(loginButton).toBeVisible();
+    // await expect(loginButton).toBeVisible();
+    await loginButton.waitFor({state:"visible",timeout:5000})
 
     await loginButton.click();
 
@@ -54,12 +55,12 @@ describe("Blog app", () => {
 
   describe("when logged in", () => {
     beforeEach(async ({ page }) => {
-      await page.getByRole("button", { name: "log in" }).click();
+      await page.getByRole("button", { name: /log in/i }).click();
       await page.getByLabel(/username/i).fill("bini");
       await page.getByLabel(/password/i).fill("password");
       await page.getByRole("button", { name: /^login$/i }).click();
 
-      await expect(page.getByText(/bini logged in/i)).not.toBeVisible();
+      await expect(page.getByText(/bini logged in/i)).toBeVisible();
     });
 
     test("a blog can be created", async ({ page }) => {
@@ -73,8 +74,9 @@ describe("Blog app", () => {
 
       //visible
       const blogList = page.locator(".blog-summary");
-      await expect(blogList.last().getByText("kite runner")).toBeVisible();
-      await expect(blogList.last().getByText("khaled")).toBeVisible();
+      // await expect(blogList.last().getByText("kite runner")).toBeVisible();
+      // await expect(blogList.last().getByText("khaled")).toBeVisible();
+      await expect(blogList.last()).toHaveText(/kite runner.*khaled/);
     });
 
     test("increments the like when like button is clicked", async ({
@@ -213,6 +215,87 @@ describe("Blog app", () => {
       await expect(
         blogCardA.getByRole("button", { name: /remove/i })
       ).toBeVisible();
+    });
+
+    test("blogs are arranged according to the likes,the blog with the most likes first", async ({
+      page,
+      request,
+    }) => {
+      //login at first
+
+      await page.getByRole("button", { name: /log in/i }).click();
+      await page.getByLabel(/username/i).fill("bini");
+      await page.getByLabel(/password/i).fill("password");
+      await page.getByRole("button", { name: /^login$/i }).click();
+
+      await page.getByText(/bini logged in/i).waitFor({ state: "visible" });
+
+      //create 3 blogs
+      const blogs = [
+        {
+          title: "blogA",
+          author: "user A",
+          url: "a.com",
+        },
+        {
+          title: "blogB",
+          author: "user B",
+          url: "b.com",
+        },
+        {
+          title: "blogC",
+          author: "user C",
+          url: "c.com",
+        },
+      ];
+
+      for (let blog of blogs) {
+        await page.getByRole("button", { name: /create new blog/i }).click();
+        await page.getByLabel(/title/i).fill(blog.title);
+        await page.getByLabel(/author/i).fill(blog.author);
+        await page.getByLabel(/url/i).fill(blog.url);
+        await page.getByRole("button", { name: /^create$/i }).click();
+      }
+      //like blog B by 5 times
+      const blogB = page.getByTestId(/blog-/).filter({
+        has: page.getByText("blogB"),
+      });
+      await blogB.getByRole("button", { name: /view/i }).click();
+
+      for (let i = 0; i < 5; i++) {
+        await blogB.getByRole("button", { name: /like/i }).click();
+        const likeCount = blogB.getByTestId("like-count");
+        await expect(likeCount).toHaveText(String(i + 1), { timeout: 5000 });
+      }
+
+      //like blog A by 2 times
+      const blogA = page.getByTestId(/blog-/).filter({
+        has: page.getByText("blogA"),
+      });
+      await blogA.getByRole("button", { name: /view/i }).click();
+
+      for (let i = 0; i < 2; i++) {
+        await blogA.getByRole("button", { name: /like/i }).click();
+        const likeCount = blogA.getByTestId("like-count");
+        await expect(likeCount).toHaveText(String(i + 1), { timeout: 5000 });
+      }
+
+      //like blog C by 1 times
+      const blogC = page.getByTestId(/blog-/).filter({
+        has: page.getByText("blogC"),
+      });
+      await blogC.getByRole("button", { name: /view/i}).click()
+      await blogC.getByRole("button", { name: /like/i }).click();
+      await expect(blogC.getByTestId("like-count")).toHaveText("1",{timeout:5000})
+
+      const blogElements = await page.locator(".blog-summary .title").allTextContents();
+      expect(blogElements).toEqual(["blogB","blogA","blogC"])
+      // await expect(blogElements.first()).toHaveText("blogB",{timeout:5000})
+      // const titles = await blogElements.allTextContents();
+
+      // expect(titles[0]).toBe("blogB");
+      // expect(titles[1]).toBe("blogA");
+      // expect(titles[2]).toBe("blogC");
     });
   });
 });
