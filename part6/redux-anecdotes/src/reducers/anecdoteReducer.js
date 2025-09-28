@@ -44,7 +44,7 @@ const reducer = (state = initialState, action) => {
       return state
   }
 }
-
+//action creators
 
 export const voteAnecdote = (id)=>{
   return {
