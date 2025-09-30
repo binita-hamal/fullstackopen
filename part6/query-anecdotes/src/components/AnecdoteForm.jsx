@@ -15,6 +15,12 @@ const AnecdoteForm = () => {
       
       dispatch({type:'SET_NOTIFICATION',payload: `anecdote ${newAnecdote.content} created `})
       setTimeout(()=> dispatch({type:"CLEAR_NOTIFICATION"}),5000)
+    },
+
+
+    onError: (error)=>{
+      dispatch({type:'SET_NOTIFICATION',payload: `too short anecdote, must have length 5 or more`})
+      setTimeout(()=> dispatch({type:"CLEAR_NOTIFICATION"}),5000)
 
     }
   })
@@ -25,10 +31,10 @@ const AnecdoteForm = () => {
     event.target.anecdote.value = ''
     console.log('new anecdote')
 
-    if(content.length <5){
-      alert('anecdote must be atleast 5 character long')
-      return 
-    }
+    // if(content.length <5){
+    //   alert('anecdote must be atleast 5 character long')
+    //   return 
+    // }
 
     newAnecdoteMutation.mutate({
       content,
