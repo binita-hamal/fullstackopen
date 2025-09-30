@@ -1,8 +1,8 @@
-import anecdote from '../../redux-anecdotes/src/services/anecdote'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery } from '@tanstack/react-query'
-import { getAnecdotes } from './requests'
+import { getAnecdotes, voteAnecdote } from './requests'
+import { useMutation,useQueryClient } from '@tanstack/react-query'
 
 const App = () => {
 
@@ -11,6 +11,17 @@ const App = () => {
     queryFn:getAnecdotes,
     retry:1
    })
+
+   const queryClient = useQueryClient()
+
+
+   const voteMutation = useMutation({
+    mutationFn:voteAnecdote,
+    onSuccess:()=>{
+      queryClient.invalidateQueries({queryKey:['anecdotes']})
+    }
+   })
+
 
    if(result.isLoading){
     return <div>loading data...</div>
@@ -28,6 +39,7 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     console.log('vote')
+    voteMutation.mutate(anecdote)
   }
 
   // const anecdotes = [
