@@ -17,7 +17,7 @@ function AnecdoteList() {
 
   const vote = (anecdote) => {
     console.log("vote", anecdote.id);
-    dispatch(voteAnecdote(anecdote.id));
+    dispatch(voteAnecdote(anecdote));
     dispatch(showNotification(`You voted for ${anecdote.content}`,5))
   };
 
